@@ -7,7 +7,7 @@ using namespace std;
 
 vector<User> users;
 
-int d = 0;
+int d = 0; //add_user()
 void add_user()
 {
     string a, b, c;
@@ -31,40 +31,52 @@ void add_user()
     d++;
 }
 
-void start(int o)
+void start()
 {
-    if (o == 0)
-    {
     cout << "1. dodaj nowego uzytkownika \n";
     cout << "2. wyswietl dane uzytkownika \n";
     cout << "3. zapisz do pliku \n";
     cout << "4. wyswietl dane uzytkownika z pliku \n";
-    cout << "5. zakoncz \n";
-    
+    cout << "5. imie od tylu \n";
+    cout << "6. zakoncz \n";
+    cout << "------------------------------------------------ \n";
+}
+
+void next()
+{
+    cout << "podaj numer nastepnej operacji \n";
+}
+
+bool if_size_0()
+{
+    if (users.size() == 0)
+    {
+        cout << "brak uzytkownikow \n";
+        return false;
     }
     else
     {
-        cout << "podaj numer kolejnej operacji \n";
+        return true;
     }
 }
 
 void find_user(string im)
 {
-    for(int i = 0; i < 1; i++)
+    
+    if (users.size() == 0)
     {
-        if (users.size() == 0)
+        cout << "brak uzytkownikow \n";
+        goto end;
+    }
+    for (int z = 0; z < users.size(); z++)
+    {
+        if (users[z].check_if_obj_exist(im) == true)
         {
-            cout << "brak uzytkownikow \n";
-            break;
-        }
-        for (int z = 0; z < users.size(); z++)
-        {
-            if (users[z].check_if_obj_exist(im) == true)
-            {
-                users[z].print();
-            }
+            users[z].print();
         }
     }
+    end:
+    {};
 }
 
 bool mail_check(string x)
@@ -100,7 +112,7 @@ bool mail_check(string x)
         return true;
 }
 
-void load_to_file() //poprawic wczytywanie bo wszystkie dane zawsze sie wczytuja
+void load_to_file()
 {
     for(int i = 0; i < users.size(); i++)
     {
@@ -118,6 +130,7 @@ void load_to_file() //poprawic wczytywanie bo wszystkie dane zawsze sie wczytuja
 
 //load from file chyba do poprawy
 //jakies dziwne rzeczy sie tu wydarzyly
+//chociaz moze nie?
 
 void load_from_file(string y)
 {
@@ -156,14 +169,36 @@ void load_from_file(string y)
    {}
 }
 
+void name_from_back(string x)
+{
+    for(int i = x.size() - 1; i >= 0; i --)
+    {
+        cout << x[i];
+    }
+    cout << endl;
+}
+
+string name_surname()
+{
+    string x;
+    cout << "podaj imie i nazwisko(jan_nowak) \n"; cin >> x;
+    return x;
+}
+
+string name()
+{
+    string x;
+    cout << "podaj imie \n"; cin >> x;
+    return x;
+}
+
 void operation()
 {
-    int licz = 0;
     int a;
     string i_n;
+    start();
     while(true)
     {
-        start(licz);
         cin >> a;
         switch(a)
         {
@@ -171,24 +206,34 @@ void operation()
                 add_user();
                 break;
             case 2:
-                cout << "podaj imie i nazwisko(jan_nowak) \n";
-                cin >> i_n;
-                find_user(i_n);
-                break;
+                if(if_size_0() == true)
+                {
+                    i_n = name_surname();
+                    find_user(i_n);
+                    break;
+                }
+                else
+                {
+                    break;
+                }
             case 3:
                 load_to_file();
                 break;
             case 4:
-                cout << "podaj imie i nazwisko(jan_nowak) \n";
-                cin >> i_n;
+                i_n = name_surname();
                 load_from_file(i_n);
                 break;
             case 5:
+                i_n = name();
+                name_from_back(i_n);
+                break;
+            case 6:
                 exit(0);
             default:
-                cout << "niepoprawna liczba";
+                cout << "niepoprawna liczba \n";
+                break;
         }
-        licz++;
+        next();
     }
 }
 
@@ -254,15 +299,16 @@ bool User::check_if_data_in_file_exist()
                 break;
             case 2:
                 o += linia;
+                if (o == imie + nazwisko)
+                {
+                    x.close();
+                    return true;
+                }
+                o = "";
                 break;
             case 3:
                 i = 0;
                 break;
-        }
-        if (o == imie + nazwisko)
-        {
-            x.close();
-            return true;
         }
         i++;
     }

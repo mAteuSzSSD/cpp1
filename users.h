@@ -4,11 +4,16 @@
 using namespace std;
 
 void add_user();
-void start(int o);
+void start();
+void next();
 bool mail_check(string);
+bool if_size_0();
 void load_to_file();
 void find_user(string);
 void load_from_file(string);
+void name_from_back(string);
+string name_surname();
+string name();
 
 void operation();
 
